@@ -1,4 +1,6 @@
-import ParticleNetwork from "@/components/Background/ParticleNetwork";
+"use client";
+
+import dynamic from "next/dynamic";
 import Sidebar from "@/components/Layout/Sidebar";
 import MobileNav from "@/components/Layout/MobileNav";
 import About from "@/components/Sections/About";
@@ -10,10 +12,17 @@ import Contact from "@/components/Sections/Contact";
 import KonamiCode from "@/components/UI/KonamiCode";
 import ScrollToTop from "@/components/UI/ScrollToTop";
 import LoadingScreen from "@/components/UI/LoadingScreen";
+import SkipToContent from "@/components/UI/SkipToContent";
+
+const ParticleNetwork = dynamic(
+  () => import("@/components/Background/ParticleNetwork"),
+  { ssr: false }
+);
 
 export default function Home() {
   return (
     <>
+      <SkipToContent />
       <LoadingScreen />
       <ParticleNetwork />
       <KonamiCode />
@@ -24,11 +33,14 @@ export default function Home() {
         <div className="lg:flex lg:justify-between lg:gap-4">
           <Sidebar />
 
-          <main className="pt-24 lg:pt-24 lg:w-1/2 lg:py-24">
+          <main id="main-content" className="pt-24 lg:pt-24 lg:w-1/2 lg:py-24">
             <About />
             <Skills />
             <Now />
-            <Timeline />
+            {/* Timeline shows on mobile only - on desktop it's in the sidebar */}
+            <div className="lg:hidden">
+              <Timeline />
+            </div>
             <Projects />
             <Contact />
 

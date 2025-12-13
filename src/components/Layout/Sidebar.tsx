@@ -11,10 +11,36 @@ const navItems = [
   { label: "About", href: "#about" },
   { label: "Skills", href: "#skills" },
   { label: "Focus", href: "#now" },
-  { label: "Journey", href: "#timeline" },
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
   { label: "Blog", href: "/blog", isExternal: true },
+];
+
+const timelineItems = [
+  {
+    year: "2025",
+    title: "Chainlink Hackathon",
+    description:
+      "Built Emerald DAO - a decentralized governance platform with on-chain treasury management.",
+  },
+  {
+    year: "2024 - Present",
+    title: "Cyfrin Updraft Security Course",
+    description:
+      "Advanced smart contract security, auditing methodologies, and vulnerability research.",
+  },
+  {
+    year: "2023 - Present",
+    title: "Computer Science Degree",
+    description:
+      "Pursuing BS in Computer Science with focus on algorithms, systems, and security.",
+  },
+  {
+    year: "2018",
+    title: "Entered Crypto",
+    description:
+      "First exposure to Ethereum and smart contracts. Started learning Solidity.",
+  },
 ];
 
 export default function Sidebar() {
@@ -47,7 +73,7 @@ export default function Sidebar() {
   }, [activeSection]);
 
   return (
-    <aside className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-[300px] lg:flex-col lg:justify-between lg:py-24 lg:pr-12">
+    <aside className="lg:w-[380px] lg:flex-shrink-0 lg:py-24 lg:pr-12">
       <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -119,13 +145,45 @@ export default function Sidebar() {
             })}
           </ul>
         </nav>
+
+        {/* Journey Timeline - Desktop only */}
+        <div className="mt-12 hidden lg:block">
+          <h3 className="text-xs font-medium uppercase tracking-widest text-text-tertiary mb-6">
+            Journey
+          </h3>
+          <div className="relative">
+            <div className="absolute left-[3px] top-2 bottom-2 w-px bg-border" />
+            <div className="space-y-4">
+              {timelineItems.map((item, index) => (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
+                  className="relative pl-6"
+                >
+                  <div className="absolute left-0 top-1.5 w-[7px] h-[7px] rounded-full bg-accent-primary" />
+                  <span className="font-mono text-[10px] text-accent-primary">
+                    {item.year}
+                  </span>
+                  <h4 className="text-sm font-medium text-text-primary leading-tight">
+                    {item.title}
+                  </h4>
+                  <p className="text-xs text-text-secondary mt-0.5 leading-relaxed">
+                    {item.description}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="mt-8 lg:mt-0"
+        className="mt-8 lg:mt-12"
       >
         <SocialLinks />
       </motion.div>

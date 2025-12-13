@@ -12,6 +12,7 @@ export interface BlogPost {
   content: string;
   contentHtml: string;
   readingTime: number;
+  tags: string[];
 }
 
 export interface BlogPostMeta {
@@ -20,6 +21,7 @@ export interface BlogPostMeta {
   date: string;
   excerpt: string;
   readingTime: number;
+  tags: string[];
 }
 
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
@@ -50,6 +52,7 @@ export function getAllPosts(): BlogPostMeta[] {
         date: data.date || "",
         excerpt: data.excerpt || "",
         readingTime: calculateReadingTime(content),
+        tags: data.tags || [],
       };
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -84,6 +87,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     content,
     contentHtml,
     readingTime: calculateReadingTime(content),
+    tags: data.tags || [],
   };
 }
 

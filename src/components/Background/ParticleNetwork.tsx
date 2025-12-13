@@ -160,6 +160,7 @@ export default function ParticleNetwork() {
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full"
       style={{ zIndex: -1 }}
+      aria-hidden="true"
     />
   );
 }

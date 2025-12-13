@@ -34,6 +34,7 @@ const jsonLd = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://unorthod0xd.xyz"),
   title: "unorthod0xd | Blockchain Security Engineer",
   description:
     "Blockchain security engineer specializing in smart contract auditing and DeFi protocol security. Building at the intersection of security and quantitative finance.",
@@ -49,6 +50,12 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.svg",
   },
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
+  },
   openGraph: {
     title: "unorthod0xd | Blockchain Security Engineer",
     description:
@@ -58,7 +65,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image.svg",
         width: 1200,
         height: 630,
         alt: "unorthod0xd - Blockchain Security Engineer",
@@ -70,7 +77,7 @@ export const metadata: Metadata = {
     title: "unorthod0xd | Blockchain Security Engineer",
     description:
       "Building at the intersection of smart contract security and quantitative finance.",
-    images: ["/og-image.png"],
+    images: ["/og-image.svg"],
   },
 };
 
