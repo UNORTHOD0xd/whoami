@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import SectionHeader from "../UI/SectionHeader";
 import ProjectCard from "../UI/ProjectCard";
 
@@ -47,16 +48,54 @@ const projects: Project[] = [
   },
 ];
 
+const allTags = Array.from(new Set(projects.flatMap((p) => p.tags))).sort();
+
 export default function Projects() {
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+
+  const filteredProjects = activeFilter
+    ? projects.filter((p) => p.tags.includes(activeFilter))
+    : projects;
+
   return (
     <section id="projects" className="mb-24 scroll-mt-24">
       <SectionHeader title="Projects" />
 
+      <div className="flex flex-wrap gap-2 mb-6">
+        <button
+          onClick={() => setActiveFilter(null)}
+          className={`px-3 py-1 text-xs rounded-full border transition-colors ${
+            activeFilter === null
+              ? "border-accent-primary bg-accent-primary/10 text-accent-primary"
+              : "border-border text-text-secondary hover:border-accent-primary/50"
+          }`}
+        >
+          All
+        </button>
+        {allTags.map((tag) => (
+          <button
+            key={tag}
+            onClick={() => setActiveFilter(tag === activeFilter ? null : tag)}
+            className={`px-3 py-1 text-xs rounded-full border transition-colors ${
+              activeFilter === tag
+                ? "border-accent-primary bg-accent-primary/10 text-accent-primary"
+                : "border-border text-text-secondary hover:border-accent-primary/50"
+            }`}
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
+
       <div className="grid gap-4">
-        {projects.map((project) => (
+        {filteredProjects.map((project) => (
           <ProjectCard key={project.title} {...project} />
         ))}
       </div>
+
+      {filteredProjects.length === 0 && (
+        <p className="text-text-tertiary text-sm">No projects match this filter.</p>
+      )}
 
       <p className="mt-6 text-sm text-text-tertiary">
         More projects coming as I continue building in public.

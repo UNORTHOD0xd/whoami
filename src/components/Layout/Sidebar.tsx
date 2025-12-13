@@ -2,38 +2,49 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import SocialLinks from "../UI/SocialLinks";
+import TypeWriter from "../UI/TypeWriter";
 
 const navItems = [
   { label: "About", href: "#about" },
+  { label: "Skills", href: "#skills" },
   { label: "Focus", href: "#now" },
+  { label: "Journey", href: "#timeline" },
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
+  { label: "Blog", href: "/blog", isExternal: true },
 ];
 
 export default function Sidebar() {
   const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(`#${entry.target.id}`);
-          }
-        });
-      },
-      { rootMargin: "-50% 0px -50% 0px" }
-    );
+    const handleScroll = () => {
+      const sections = document.querySelectorAll("section[id]");
+      const scrollPosition = window.scrollY + window.innerHeight / 3;
 
-    const sections = document.querySelectorAll("section[id]");
-    sections.forEach((section) => observer.observe(section));
+      let current = "";
+      sections.forEach((section) => {
+        const element = section as HTMLElement;
+        const sectionTop = element.offsetTop;
+        const sectionHeight = element.offsetHeight;
 
-    return () => {
-      sections.forEach((section) => observer.unobserve(section));
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+          current = `#${section.id}`;
+        }
+      });
+
+      if (current !== activeSection) {
+        setActiveSection(current);
+      }
     };
-  }, []);
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [activeSection]);
 
   return (
     <aside className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-[300px] lg:flex-col lg:justify-between lg:py-24 lg:pr-12">
@@ -50,6 +61,8 @@ export default function Sidebar() {
               width={120}
               height={120}
               className="rounded-full border-2 border-accent-primary/20 hover:border-accent-primary transition-colors duration-300"
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAKAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgUH/8QAIhAAAgEDBAMBAAAAAAAAAAAAAQIDAAQRBQYSIRMxQWH/xAAVAQEBAAAAAAAAAAAAAAAAAAADBP/EABkRAAIDAQAAAAAAAAAAAAAAAAECAAMRIf/aAAwDAQACEQMRAD8Amu9G3RHqmgyrp8shjvIWfxwyOMBhnOB9z2Kv7P3pp0O7NKlumSOFbyEvI5wFUOMkn4BWS+OCSO+6K0tsLHFWzJlZoP/Z"
               priority
             />
           </div>
@@ -63,15 +76,18 @@ export default function Sidebar() {
           </h2>
 
           <p className="text-text-secondary text-sm leading-relaxed max-w-xs">
-            Building at the intersection of smart contract security and
-            quantitative finance.
+            <TypeWriter
+              text="Building at the intersection of smart contract security and quantitative finance."
+              delay={30}
+            />
           </p>
         </motion.div>
 
         <nav className="mt-12 hidden lg:block">
           <ul className="space-y-4">
             {navItems.map((item, index) => {
-              const isActive = activeSection === item.href;
+              const isActive = !item.isExternal && activeSection === item.href;
+              const LinkComponent = item.isExternal ? Link : "a";
               return (
                 <motion.li
                   key={item.href}
@@ -79,7 +95,7 @@ export default function Sidebar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.1 * index }}
                 >
-                  <a
+                  <LinkComponent
                     href={item.href}
                     className={`group flex items-center transition-colors ${
                       isActive
@@ -97,7 +113,7 @@ export default function Sidebar() {
                     <span className="text-sm font-medium uppercase tracking-widest">
                       {item.label}
                     </span>
-                  </a>
+                  </LinkComponent>
                 </motion.li>
               );
             })}

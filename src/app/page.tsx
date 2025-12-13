@@ -2,14 +2,22 @@ import ParticleNetwork from "@/components/Background/ParticleNetwork";
 import Sidebar from "@/components/Layout/Sidebar";
 import MobileNav from "@/components/Layout/MobileNav";
 import About from "@/components/Sections/About";
+import Skills from "@/components/Sections/Skills";
 import Now from "@/components/Sections/Now";
+import Timeline from "@/components/Sections/Timeline";
 import Projects from "@/components/Sections/Projects";
 import Contact from "@/components/Sections/Contact";
+import KonamiCode from "@/components/UI/KonamiCode";
+import ScrollToTop from "@/components/UI/ScrollToTop";
+import LoadingScreen from "@/components/UI/LoadingScreen";
 
 export default function Home() {
   return (
     <>
+      <LoadingScreen />
       <ParticleNetwork />
+      <KonamiCode />
+      <ScrollToTop />
       <MobileNav />
 
       <div className="mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 lg:px-24 lg:py-0">
@@ -18,7 +26,9 @@ export default function Home() {
 
           <main className="pt-24 lg:pt-24 lg:w-1/2 lg:py-24">
             <About />
+            <Skills />
             <Now />
+            <Timeline />
             <Projects />
             <Contact />
 

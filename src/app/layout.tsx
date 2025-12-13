@@ -12,6 +12,27 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
 });
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "unorthod0xd",
+  url: "https://unorthod0xd.xyz",
+  jobTitle: "Blockchain Security Engineer",
+  description:
+    "Blockchain security engineer specializing in smart contract auditing and DeFi protocol security.",
+  sameAs: [
+    "https://github.com/UNORTHOD0xd",
+    "https://x.com/un_orthodoxd",
+  ],
+  knowsAbout: [
+    "Smart Contract Security",
+    "Solidity",
+    "DeFi",
+    "Ethereum",
+    "Blockchain",
+  ],
+};
+
 export const metadata: Metadata = {
   title: "unorthod0xd | Blockchain Security Engineer",
   description:
@@ -60,7 +81,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

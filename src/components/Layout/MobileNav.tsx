@@ -4,13 +4,17 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import SocialLinks from "../UI/SocialLinks";
 
 const navItems = [
   { label: "About", href: "#about" },
+  { label: "Skills", href: "#skills" },
   { label: "Focus", href: "#now" },
+  { label: "Journey", href: "#timeline" },
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
+  { label: "Blog", href: "/blog", isExternal: true },
 ];
 
 export default function MobileNav() {
@@ -51,16 +55,19 @@ export default function MobileNav() {
             className="border-t border-border overflow-hidden"
           >
             <div className="px-6 py-4 space-y-4">
-              {navItems.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className="block text-text-secondary hover:text-accent-primary transition-colors text-sm font-medium uppercase tracking-widest"
-                >
-                  {item.label}
-                </a>
-              ))}
+              {navItems.map((item) => {
+                const LinkComponent = item.isExternal ? Link : "a";
+                return (
+                  <LinkComponent
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className="block text-text-secondary hover:text-accent-primary transition-colors text-sm font-medium uppercase tracking-widest"
+                  >
+                    {item.label}
+                  </LinkComponent>
+                );
+              })}
               <div className="pt-4 border-t border-border">
                 <SocialLinks />
               </div>

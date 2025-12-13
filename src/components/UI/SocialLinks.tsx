@@ -8,7 +8,7 @@ const socials = [
   },
   {
     label: "X",
-    href: "https://x.com/unorthod0xd",
+    href: "https://x.com/un_orthodoxd",
     icon: Twitter,
   },
   {

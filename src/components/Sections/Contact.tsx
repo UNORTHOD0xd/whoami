@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import SectionHeader from "../UI/SectionHeader";
+import CopyEmail from "../UI/CopyEmail";
 
 export default function Contact() {
   return (
@@ -22,7 +23,7 @@ export default function Contact() {
           reach out.
         </p>
 
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <a
             href="mailto:contact@unorthod0xd.xyz"
             className="inline-flex items-center gap-2 rounded border border-accent-primary px-6 py-3 text-sm font-medium text-accent-primary hover:bg-accent-primary/10 transition-colors"
@@ -37,6 +38,7 @@ export default function Contact() {
           >
             View Resume
           </a>
+          <CopyEmail email="contact@unorthod0xd.xyz" />
         </div>
       </motion.div>
     </section>
