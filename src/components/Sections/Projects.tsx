@@ -14,27 +14,35 @@ interface Project {
 
 const projects: Project[] = [
   {
-    title: "Smart Contract Security Coursework",
+    title: "Foundry DeFi Stablecoin",
     description:
-      "Cyfrin Updraft exercises, practice audits, and security pattern implementations. Documenting the journey from fundamentals to advanced vulnerability detection.",
-    tags: ["Solidity", "Foundry", "Security"],
-    githubUrl: "https://github.com/UNORTHOD0xd",
-    status: "Coursework",
-  },
-  {
-    title: "EVM Deep-Dive Notes",
-    description:
-      "Documentation of EVM architecture study including opcode analysis, gas optimization patterns, and post-Merge execution layer internals.",
-    tags: ["EVM", "Technical Writing", "Ethereum"],
-    githubUrl: "https://github.com/UNORTHOD0xd",
+      "A decentralized stablecoin system built with Foundry. Implements collateralized debt positions, liquidation mechanisms, and price oracle integration.",
+    tags: ["Solidity", "Foundry", "DeFi"],
+    githubUrl: "https://github.com/UNORTHOD0xd/Foundry-Defi-Stablecoin",
     status: "Personal",
   },
   {
-    title: "NexusChain",
+    title: "Emerald DAO",
     description:
-      "Blockchain-based supply chain tracking system built during the Intellibus AI Hackathon 2025. Real-time transparency and verification for product lifecycle.",
-    tags: ["Blockchain", "Supply Chain", "Hackathon"],
-    githubUrl: "https://github.com/UNORTHOD0xd",
+      "Decentralized autonomous organization built for the 2025 Chainlink Hackathon. Features governance mechanisms, proposal voting, and on-chain treasury management.",
+    tags: ["Solidity", "Chainlink", "DAO"],
+    githubUrl: "https://github.com/UNORTHOD0xd/EMERALD-DAO",
+    status: "Personal",
+  },
+  {
+    title: "Emerald DAO Frontend",
+    description:
+      "React-based web interface for the Emerald DAO. Connects to smart contracts for proposal creation, voting, and treasury visualization.",
+    tags: ["TypeScript", "React", "Web3"],
+    githubUrl: "https://github.com/UNORTHOD0xd/Emerald-DAO-Frontend",
+    status: "Personal",
+  },
+  {
+    title: "Nexus Chain",
+    description:
+      "Blockchain-based supply chain tracking system. Real-time transparency and verification for product lifecycle management.",
+    tags: ["JavaScript", "Blockchain", "Supply Chain"],
+    githubUrl: "https://github.com/UNORTHOD0xd/Nexus-Chain",
     status: "Personal",
   },
 ];

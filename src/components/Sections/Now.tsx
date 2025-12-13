@@ -27,11 +27,11 @@ const focusItems: FocusItem[] = [
     tags: ["EVM", "Architecture", "Ethereum"],
   },
   {
-    title: "Statistics & Probability",
+    title: "Computer Science Foundation",
     status: "University",
     description:
-      "Distributions, hypothesis testing, and quantitative foundations for trading systems.",
-    tags: ["Statistics", "Probability", "Quant"],
+      "Data structures, algorithms, discrete mathematics, and systems programming. Building the theoretical and practical foundation for software engineering.",
+    tags: ["Algorithms", "Data Structures", "Systems"],
   },
   {
     title: "Trading Systems Development",

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import SocialLinks from "../UI/SocialLinks";
@@ -12,6 +13,28 @@ const navItems = [
 ];
 
 export default function Sidebar() {
+  const [activeSection, setActiveSection] = useState("");
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(`#${entry.target.id}`);
+          }
+        });
+      },
+      { rootMargin: "-50% 0px -50% 0px" }
+    );
+
+    const sections = document.querySelectorAll("section[id]");
+    sections.forEach((section) => observer.observe(section));
+
+    return () => {
+      sections.forEach((section) => observer.unobserve(section));
+    };
+  }, []);
+
   return (
     <aside className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-[300px] lg:flex-col lg:justify-between lg:py-24 lg:pr-12">
       <div>
@@ -47,24 +70,37 @@ export default function Sidebar() {
 
         <nav className="mt-12 hidden lg:block">
           <ul className="space-y-4">
-            {navItems.map((item, index) => (
-              <motion.li
-                key={item.href}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 * index }}
-              >
-                <a
-                  href={item.href}
-                  className="group flex items-center text-text-secondary hover:text-accent-primary transition-colors"
+            {navItems.map((item, index) => {
+              const isActive = activeSection === item.href;
+              return (
+                <motion.li
+                  key={item.href}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 * index }}
                 >
-                  <span className="mr-4 h-px w-8 bg-text-tertiary group-hover:w-16 group-hover:bg-accent-primary transition-all duration-300" />
-                  <span className="text-sm font-medium uppercase tracking-widest">
-                    {item.label}
-                  </span>
-                </a>
-              </motion.li>
-            ))}
+                  <a
+                    href={item.href}
+                    className={`group flex items-center transition-colors ${
+                      isActive
+                        ? "text-accent-primary"
+                        : "text-text-secondary hover:text-accent-primary"
+                    }`}
+                  >
+                    <span
+                      className={`mr-4 h-px transition-all duration-300 ${
+                        isActive
+                          ? "w-16 bg-accent-primary"
+                          : "w-8 bg-text-tertiary group-hover:w-16 group-hover:bg-accent-primary"
+                      }`}
+                    />
+                    <span className="text-sm font-medium uppercase tracking-widest">
+                      {item.label}
+                    </span>
+                  </a>
+                </motion.li>
+              );
+            })}
           </ul>
         </nav>
       </div>

@@ -27,7 +27,7 @@ export default function ProjectCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      className="group relative rounded-lg border border-border bg-bg-card/50 p-6 hover:border-accent-primary/50 hover:bg-bg-card transition-all duration-300"
+      className="group relative rounded-lg border border-border bg-bg-card/50 p-6 hover:border-accent-primary/50 hover:bg-bg-card hover:scale-[1.02] transition-all duration-300"
     >
       <div className="flex items-start justify-between mb-4">
         <h3 className="font-medium text-text-primary group-hover:text-accent-primary transition-colors">

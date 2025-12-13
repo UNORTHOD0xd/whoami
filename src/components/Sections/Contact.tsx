@@ -22,12 +22,20 @@ export default function Contact() {
           reach out.
         </p>
 
-        <div className="space-y-3">
+        <div className="flex flex-wrap gap-4">
           <a
             href="mailto:contact@unorthod0xd.xyz"
             className="inline-flex items-center gap-2 rounded border border-accent-primary px-6 py-3 text-sm font-medium text-accent-primary hover:bg-accent-primary/10 transition-colors"
           >
             Get in Touch
+          </a>
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded border border-border px-6 py-3 text-sm font-medium text-text-secondary hover:border-accent-primary hover:text-accent-primary transition-colors"
+          >
+            View Resume
           </a>
         </div>
       </motion.div>

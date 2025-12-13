@@ -33,7 +33,7 @@ export default function ParticleNetwork() {
 
     const initParticles = () => {
       particles = [];
-      const count = Math.floor((canvas.width * canvas.height) / 10000);
+      const count = Math.floor((canvas.width * canvas.height) / 15000);
       for (let i = 0; i < count; i++) {
         const x = Math.random() * canvas.width;
         const y = Math.random() * canvas.height;

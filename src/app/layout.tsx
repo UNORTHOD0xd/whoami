@@ -25,6 +25,9 @@ export const metadata: Metadata = {
     "security engineer",
   ],
   authors: [{ name: "unorthod0xd" }],
+  icons: {
+    icon: "/favicon.svg",
+  },
   openGraph: {
     title: "unorthod0xd | Blockchain Security Engineer",
     description:
@@ -32,12 +35,21 @@ export const metadata: Metadata = {
     url: "https://unorthod0xd.xyz",
     siteName: "unorthod0xd",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "unorthod0xd - Blockchain Security Engineer",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "unorthod0xd | Blockchain Security Engineer",
     description:
       "Building at the intersection of smart contract security and quantitative finance.",
+    images: ["/og-image.png"],
   },
 };
 
