@@ -18,7 +18,7 @@ This isn't a portfolio. It's a runtime log.
 
 A single-page Next.js site documenting the journey from script kiddie to blockchain security researcher. Origin story.
 
-**Live:** [unorthod0xd.xyz](https://unorthod0xd.xyz) *(coming soon)*
+**Live:** [unorthod0xd.xyz](https://unorthod0xd.xyz)
 
 ---
 
