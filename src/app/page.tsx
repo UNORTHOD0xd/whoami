@@ -62,14 +62,6 @@ export default function Home() {
                 >
                   Tailwind CSS
                 </a>
-                . Deployed on{" "}
-                <a
-                  href="https://vercel.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Vercel
-                </a>
                 .
               </p>
             </footer>

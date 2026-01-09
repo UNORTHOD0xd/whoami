@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { BookOpen } from "lucide-react";
 import SocialLinks from "../UI/SocialLinks";
 import TypeWriter from "../UI/TypeWriter";
 
@@ -13,8 +14,9 @@ const navItems = [
   { label: "Focus", href: "#now" },
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
-  { label: "Blog", href: "/blog", isExternal: true },
 ];
+
+const blogLink = { label: "Blog", href: "/blog", isExternal: true };
 
 const timelineItems = [
   {
@@ -112,8 +114,7 @@ export default function Sidebar() {
         <nav className="mt-12 hidden lg:block">
           <ul className="space-y-4">
             {navItems.map((item, index) => {
-              const isActive = !item.isExternal && activeSection === item.href;
-              const LinkComponent = item.isExternal ? Link : "a";
+              const isActive = activeSection === item.href;
               return (
                 <motion.li
                   key={item.href}
@@ -121,7 +122,7 @@ export default function Sidebar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.1 * index }}
                 >
-                  <LinkComponent
+                  <a
                     href={item.href}
                     className={`group flex items-center transition-colors ${
                       isActive
@@ -139,11 +140,32 @@ export default function Sidebar() {
                     <span className="text-sm font-medium uppercase tracking-widest">
                       {item.label}
                     </span>
-                  </LinkComponent>
+                  </a>
                 </motion.li>
               );
             })}
           </ul>
+
+          {/* Prominent Blog Link */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: 0.6 }}
+            className="mt-8"
+          >
+            <Link
+              href={blogLink.href}
+              className="group inline-flex items-center gap-2 px-4 py-2 border border-accent-primary/40 rounded-full text-accent-primary hover:bg-accent-primary/10 hover:border-accent-primary transition-all duration-300"
+            >
+              <BookOpen size={16} className="group-hover:scale-110 transition-transform duration-300" />
+              <span className="text-sm font-medium uppercase tracking-widest">
+                {blogLink.label}
+              </span>
+            </Link>
+            <p className="mt-2 ml-1 text-xs text-text-tertiary">
+              Documenting my journey
+            </p>
+          </motion.div>
         </nav>
 
         {/* Journey Timeline - Desktop only */}

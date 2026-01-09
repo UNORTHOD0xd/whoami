@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, BookOpen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import SocialLinks from "../UI/SocialLinks";
@@ -14,8 +14,9 @@ const navItems = [
   { label: "Journey", href: "#timeline" },
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
-  { label: "Blog", href: "/blog", isExternal: true },
 ];
+
+const blogLink = { label: "Blog", href: "/blog" };
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,19 +56,34 @@ export default function MobileNav() {
             className="border-t border-border overflow-hidden"
           >
             <div className="px-6 py-4 space-y-4">
-              {navItems.map((item) => {
-                const LinkComponent = item.isExternal ? Link : "a";
-                return (
-                  <LinkComponent
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className="block text-text-secondary hover:text-accent-primary transition-colors text-sm font-medium uppercase tracking-widest"
-                  >
-                    {item.label}
-                  </LinkComponent>
-                );
-              })}
+              {navItems.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className="block text-text-secondary hover:text-accent-primary transition-colors text-sm font-medium uppercase tracking-widest"
+                >
+                  {item.label}
+                </a>
+              ))}
+
+              {/* Prominent Blog Link */}
+              <div className="pt-4 border-t border-border">
+                <Link
+                  href={blogLink.href}
+                  onClick={() => setIsOpen(false)}
+                  className="inline-flex items-center gap-2 px-4 py-2 border border-accent-primary/40 rounded-full text-accent-primary hover:bg-accent-primary/10 hover:border-accent-primary transition-all duration-300"
+                >
+                  <BookOpen size={16} />
+                  <span className="text-sm font-medium uppercase tracking-widest">
+                    {blogLink.label}
+                  </span>
+                </Link>
+                <p className="mt-2 text-xs text-text-tertiary">
+                  Documenting my journey
+                </p>
+              </div>
+
               <div className="pt-4 border-t border-border">
                 <SocialLinks />
               </div>
