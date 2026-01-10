@@ -19,7 +19,7 @@ export default function BlogCard({
   date,
   readingTime,
 }: BlogCardProps) {
-  const formattedDate = new Date(date).toLocaleDateString("en-US", {
+  const formattedDate = new Date(date + "T00:00:00").toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
