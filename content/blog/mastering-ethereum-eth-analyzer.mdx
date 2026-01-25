@@ -1,0 +1,199 @@
+---
+title: "What Building a Blockchain Analyzer Taught Me About Ethereum Basics"
+date: "2026-01-25"
+excerpt: "How building a Rust CLI tool helped me internalize the first two chapters of Mastering Ethereum - accounts, transactions, gas, and blocks."
+tags: ["ethereum", "rust", "learning", "technical", "building"]
+---
+
+**Heads up:** This post is more technical than my previous ones. I'll be diving into Ethereum internals and showing actual code. If you're looking for the narrative journey stuff, check out my earlier posts. If you want to see theory meet practice, stick around.
+
+---
+
+If you read my last post, you know I made a decision to pause the Cyfrin course and go back to basics with "Mastering Ethereum." The plan was simple: follow the book chapter by chapter, and actually *build* something that reinforces each concept.
+
+Enter [ETH Analyzer](https://github.com/UNORTHOD0xd/eth-analyzer) - a Rust CLI tool I built to query and analyze Ethereum blockchain data. I know this is a tool already built into Foundry, but writing it from scratch helps me both better understand how Foundry works as well as the Ethereum primitives.
+
+## Chapter 1: What is Ethereum?
+
+The first chapter covers the foundational "what" - what makes Ethereum different from Bitcoin, what a world computer actually means, and the basic components that make it all work.
+
+Three concepts stood out:
+
+### Accounts and State
+
+Ethereum is essentially a state machine. The "world state" is a mapping of every account to its current state - balance, nonce, storage, and code (for contracts). Every transaction transitions this state.
+
+When I built the balance query feature in eth-analyzer, this clicked differently:
+
+```rust
+pub async fn get_balance(provider: &Provider<Http>, address: &str) -> Result<()> {
+    let address: Address = address.parse()?;
+    let balance = provider.get_balance(address, None).await?;
+
+    let balance_in_eth = format_units(balance, "ether")?;
+    println!("Balance: {} ETH", balance_in_eth);
+    println!("Balance: {} Wei", balance);
+
+    Ok(())
+}
+```
+
+That `get_balance` call is literally reading from the world state. The provider queries a node, which looks up that address in the current state trie and returns its balance. Simple in code, but understanding *what* you're actually querying matters.
+
+### Externally Owned Accounts vs Contract Accounts
+
+The book distinguishes between EOAs (controlled by private keys) and contract accounts (controlled by code). Both have balances and nonces, but only contracts have code and storage.
+
+This distinction becomes obvious when you start inspecting addresses:
+
+```bash
+# EOA - just has a balance
+eth-analyzer balance 0x742d35Cc6634C0532925a3b844Bc9e7595f...
+
+# Contract - has code at this address
+eth-analyzer balance 0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984
+```
+
+Same command, but knowing what *type* of account you're querying helps you understand what to expect.
+
+### Transactions as State Transitions
+
+Every transaction in Ethereum is a signed instruction that transitions the world state. The book hammers this point: Ethereum doesn't store transactions in the traditional sense - it stores the *results* of transactions as state changes.
+
+This reframing helped me understand why transaction receipts exist and what they actually represent.
+
+## Chapter 2: Ethereum Basics
+
+Chapter 2 gets into the practical details - how transactions work, what gas actually is, and the anatomy of a block. This is where eth-analyzer really started taking shape.
+
+### Transaction Anatomy
+
+A transaction contains:
+- **nonce**: Sequence number from the sender's account
+- **gasPrice** (or maxFeePerGas/maxPriorityFeePerGas for EIP-1559): What you're willing to pay per unit of gas
+- **gasLimit**: Maximum gas you're willing to consume
+- **to**: Recipient address (or empty for contract creation)
+- **value**: Amount of ETH to transfer
+- **data**: Payload (contract call data or contract bytecode)
+
+Building the transaction analyzer forced me to handle all of these:
+
+```rust
+pub async fn analyze_transaction(provider: &Provider<Http>, tx_hash: &str) -> Result<()> {
+    let hash: H256 = tx_hash.parse()?;
+
+    // Get the transaction itself
+    let tx = provider.get_transaction(hash).await?
+        .ok_or_else(|| eyre::eyre!("Transaction not found"))?;
+
+    // Get the receipt for gas used and status
+    let receipt = provider.get_transaction_receipt(hash).await?
+        .ok_or_else(|| eyre::eyre!("Receipt not found"))?;
+
+    println!("From: {:?}", tx.from);
+    println!("To: {:?}", tx.to);
+    println!("Value: {} ETH", format_units(tx.value, "ether")?);
+    println!("Nonce: {}", tx.nonce);
+    println!("Gas Limit: {}", tx.gas);
+    println!("Gas Used: {}", receipt.gas_used.unwrap_or_default());
+    println!("Gas Price: {} gwei", format_units(tx.gas_price.unwrap_or_default(), "gwei")?);
+
+    // Calculate actual transaction fee
+    let gas_used = receipt.gas_used.unwrap_or_default();
+    let gas_price = tx.gas_price.unwrap_or_default();
+    let tx_fee = gas_used * gas_price;
+    println!("Transaction Fee: {} ETH", format_units(tx_fee, "ether")?);
+
+    Ok(())
+}
+```
+
+The distinction between `gas` (the limit) and `gas_used` (actual consumption) only makes sense when you see both values side by side. The book explains it, but parsing a real transaction receipt drives it home.
+
+### Gas Mechanics
+
+Gas is the metering mechanism that prevents infinite loops and DoS attacks. Every operation costs gas. You set a limit, and if your transaction runs out before completing, it reverts - but you still pay for the gas consumed.
+
+The formula is simple: `transaction fee = gas_used * gas_price`
+
+But EIP-1559 complicated things with base fees and priority fees. Now it's:
+
+`transaction fee = gas_used * (base_fee + priority_fee)`
+
+Where the base fee is burned and the priority fee goes to validators. Building the fee calculation logic made me actually understand why my transactions sometimes cost more than expected.
+
+### Blocks: Batches of State Transitions
+
+A block is a batch of transactions plus metadata - parent hash, state root, timestamp, gas used, etc. The block inspection feature in eth-analyzer pulls this apart:
+
+```rust
+pub async fn inspect_block(provider: &Provider<Http>, block_number: Option<u64>) -> Result<()> {
+    let block = match block_number {
+        Some(num) => provider.get_block(num).await?,
+        None => provider.get_block(BlockNumber::Latest).await?,
+    };
+
+    let block = block.ok_or_else(|| eyre::eyre!("Block not found"))?;
+
+    println!("Block Number: {}", block.number.unwrap_or_default());
+    println!("Timestamp: {}", block.timestamp);
+    println!("Transactions: {}", block.transactions.len());
+    println!("Gas Used: {}", block.gas_used);
+    println!("Gas Limit: {}", block.gas_limit);
+    println!("Base Fee: {} gwei", format_units(block.base_fee_per_gas.unwrap_or_default(), "gwei")?);
+
+    Ok(())
+}
+```
+
+Seeing `gas_used` vs `gas_limit` at the block level shows you how full each block is. Watching the `base_fee` fluctuate based on demand made the EIP-1559 fee market click.
+
+## Why Rust?
+
+Quick aside on the language choice. I could have built this in JavaScript or Python in a fraction of the time. But I chose Rust for a few reasons:
+
+1. **Learning a new language**: Rust's ownership model forces you to think differently. Good for brain plasticity.
+2. **ethers-rs**: The Rust Ethereum library is well-maintained and the patterns are clean.
+3. **Performance**: Not that it matters much for a CLI tool, but parsing blockchain data is faster.
+4. **Type safety**: Rust's compiler catches errors that would be runtime bugs in dynamic languages. When you're dealing with financial data, that matters.
+
+The tradeoff is speed of development. Everything takes longer in Rust, especially when you're learning. But the code that comes out the other side is solid.
+
+## What Actually Stuck
+
+Building eth-analyzer reinforced a few things that just reading wouldn't have:
+
+**State vs History**: Ethereum nodes store current state efficiently. Historical state requires archive nodes. This became obvious when certain queries failed on my Alchemy free tier - I was trying to query past state without realizing it.
+
+**Receipts are Proof**: Transaction receipts aren't just confirmations - they contain the actual gas used, logs emitted, and status. The transaction object tells you what was *attempted*. The receipt tells you what *happened*.
+
+**Gas Estimation is an Art**: The `gasLimit` you set is a guess. Set it too low, transaction fails. Set it too high, you lock up funds unnecessarily. Providers offer `eth_estimateGas`, but it's not always accurate for complex contract interactions.
+
+**Nonces are Sequential**: Miss a nonce and all subsequent transactions queue. This seems obvious in hindsight, but watching it happen with real transactions made the concept concrete.
+
+## What's Next
+
+Chapters 3 and 4 cover Ethereum clients and cryptography. I'm planning to extend eth-analyzer with:
+- Key generation and signing (without actually managing real keys - just for learning)
+- Raw transaction construction
+- Maybe some basic client metrics
+
+The goal isn't to build a production tool. It's to have something tangible that proves I understand the concepts, not just read about them.
+
+I'm also preparing for my third Chainlink hackathon next month. After two previous attempts - the first humbling, the second more prepared - I'm curious to see how this stronger foundation translates to building under pressure. The next blog post will probably come after that's wrapped up. Expect a hackathon retrospective or a continuation of this Mastering Ethereum series, depending on how things go.
+
+Still working through the book. Still building. The foundation is getting stronger.
+
+```rust
+// Theory + Practice = Actual Understanding
+fn learn(book: Chapter, project: &mut Project) -> Knowledge {
+    let theory = book.read();
+    let practice = project.implement(theory);
+
+    Knowledge {
+        concepts: theory,
+        experience: practice,
+        retained: true,
+    }
+}
+```
