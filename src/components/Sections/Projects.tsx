@@ -31,11 +31,19 @@ const projects: Project[] = [
     status: "Personal",
   },
   {
-    title: "Emerald DAO Frontend",
+    title: "ETH Analyzer",
     description:
-      "React-based web interface for the Emerald DAO. Connects to smart contracts for proposal creation, voting, and treasury visualization.",
-    tags: ["TypeScript", "React", "Web3"],
-    githubUrl: "https://github.com/UNORTHOD0xd/Emerald-DAO-Frontend",
+      "Rust CLI tool for Ethereum blockchain analysis. Query address balances, inspect blocks, and analyze transactions with detailed gas metrics.",
+    tags: ["Rust", "Ethereum", "CLI"],
+    githubUrl: "https://github.com/UNORTHOD0xd/eth-analyzer",
+    status: "Personal",
+  },
+  {
+    title: "Prediction Market",
+    description:
+      "Decentralized prediction market on Ethereum Sepolia using Chainlink CRE for automated AI-driven settlement via Google Gemini.",
+    tags: ["Solidity", "Chainlink", "TypeScript", "AI"],
+    githubUrl: "https://github.com/UNORTHOD0xd/Prediction-Market",
     status: "Personal",
   },
   {
