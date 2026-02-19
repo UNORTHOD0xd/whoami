@@ -100,7 +100,7 @@ export default function Sidebar() {
           </h1>
 
           <h2 className="text-lg font-medium text-text-primary mb-4">
-            Blockchain Security Engineer
+            Security Engineer
           </h2>
 
           <p className="text-text-secondary text-sm leading-relaxed max-w-xs">
