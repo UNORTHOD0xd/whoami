@@ -16,7 +16,7 @@ export default function About() {
         className="space-y-4 text-text-secondary leading-relaxed"
       >
         <p>
-          I&apos;m a blockchain security engineer and computer science student
+          I&apos;m a Security engineer and computer science student
           specializing in the Ethereum ecosystem. Currently working toward{" "}
           <a
             href="https://updraft.cyfrin.io"

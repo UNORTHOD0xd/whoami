@@ -17,7 +17,7 @@ export default function Contact() {
         className="space-y-6"
       >
         <p className="text-text-secondary leading-relaxed max-w-lg">
-          I&apos;m currently open to blockchain security roles, audit
+          I&apos;m currently open to security roles, audit
           collaborations, and conversations about DeFi protocol development.
           Whether you have a question or just want to connect, feel free to
           reach out.
