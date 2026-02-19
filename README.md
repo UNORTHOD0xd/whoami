@@ -16,7 +16,7 @@ Status: Active since 2018
 
 This isn't a portfolio. It's a runtime log.
 
-A single-page Next.js site documenting the journey from script kiddie to blockchain security researcher. Origin story.
+A Next.js site documenting the journey from script kiddie to security researcher. Origin story.
 
 **Live:** [unorthod0xd.xyz](https://unorthod0xd.xyz)
 
@@ -72,30 +72,52 @@ Open [http://localhost:3000](http://localhost:3000) and watch the daemon boot.
 whoami/
 ├── src/
 │   ├── app/
-│   │   ├── page.tsx          # Main single-page layout
-│   │   ├── layout.tsx        # Root layout with fonts, metadata
-│   │   └── globals.css       # Tailwind + custom properties
-│   └── components/
-│       ├── Background/
-│       │   └── ParticleNetwork.tsx   # Reactive particle background
-│       ├── Layout/
-│       │   ├── Sidebar.tsx           # Sticky left column (avatar, nav, socials)
-│       │   └── MobileNav.tsx         # Responsive hamburger navigation
-│       ├── Sections/
-│       │   ├── About.tsx             # Origin story
-│       │   ├── Now.tsx               # Current learning focus
-│       │   ├── Projects.tsx          # Project showcase
-│       │   └── Contact.tsx           # Links + CTA
-│       └── UI/
-│           ├── ProjectCard.tsx       # Individual project display
-│           ├── SectionHeader.tsx     # Consistent section titles
-│           ├── SocialLinks.tsx       # GitHub, Twitter, Email
-│           └── TechTag.tsx           # Tech stack tags
-├── public/
-│   └── avatar.jpg            # Profile image
+│   │   ├── page.tsx                  # Main layout
+│   │   ├── layout.tsx                # Root layout with fonts, metadata
+│   │   ├── globals.css               # Tailwind + custom properties
+│   │   ├── sitemap.ts                # Auto-generated sitemap
+│   │   ├── blog/
+│   │   │   ├── page.tsx              # Blog index
+│   │   │   ├── layout.tsx            # Blog layout
+│   │   │   └── [slug]/page.tsx       # Individual post
+│   │   └── feed.xml/route.ts         # RSS feed
+│   ├── components/
+│   │   ├── Background/
+│   │   │   └── ParticleNetwork.tsx   # Reactive particle background
+│   │   ├── Layout/
+│   │   │   ├── Sidebar.tsx           # Sticky left column (avatar, nav, socials)
+│   │   │   └── MobileNav.tsx         # Responsive hamburger navigation
+│   │   ├── Sections/
+│   │   │   ├── About.tsx             # Origin story
+│   │   │   ├── Now.tsx               # Current learning focus
+│   │   │   ├── Projects.tsx          # Project showcase
+│   │   │   ├── Skills.tsx            # Skills + tools
+│   │   │   ├── Timeline.tsx          # Career timeline
+│   │   │   └── Contact.tsx           # Links + CTA
+│   │   └── UI/
+│   │       ├── BlogCard.tsx          # Blog post preview card
+│   │       ├── CopyEmail.tsx         # Click-to-copy email
+│   │       ├── KonamiCode.tsx        # Easter egg
+│   │       ├── LoadingScreen.tsx     # Boot sequence animation
+│   │       ├── ProjectCard.tsx       # Individual project display
+│   │       ├── ScrollToTop.tsx       # Scroll to top button
+│   │       ├── SectionHeader.tsx     # Consistent section titles
+│   │       ├── SkipToContent.tsx     # Accessibility skip link
+│   │       ├── SocialLinks.tsx       # GitHub, Twitter, Email
+│   │       ├── TechTag.tsx           # Tech stack tags
+│   │       └── TypeWriter.tsx        # Typewriter text effect
+│   ├── lib/
+│   │   └── blog.ts                   # Blog post parsing + metadata
+│   └── __tests__/
+│       └── blog.test.ts              # Blog utility tests
 ├── content/
-│   └── (future blog posts)
-└── Plan.md                   # Development roadmap
+│   └── blog/                         # MDX blog posts
+├── public/
+│   ├── avatar.jpg                    # Profile image
+│   ├── favicon.svg
+│   ├── og-image.svg                  # Open Graph image
+│   └── robots.txt
+└── README.md
 ```
 
 ---
