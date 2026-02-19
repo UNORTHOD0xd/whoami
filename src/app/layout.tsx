@@ -17,9 +17,9 @@ const jsonLd = {
   "@type": "Person",
   name: "unorthod0xd",
   url: "https://unorthod0xd.xyz",
-  jobTitle: "Blockchain Security Engineer",
+  jobTitle: "Security Engineer",
   description:
-    "Blockchain security engineer specializing in smart contract auditing and DeFi protocol security.",
+    "Security engineer specializing in smart contract architecture and DeFi protocol security.",
   sameAs: [
     "https://github.com/UNORTHOD0xd",
     "https://x.com/un_orthodoxd",
@@ -35,9 +35,9 @@ const jsonLd = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://unorthod0xd.xyz"),
-  title: "unorthod0xd | Blockchain Security Engineer",
+  title: "unorthod0xd | Security Engineer",
   description:
-    "Blockchain security engineer specializing in smart contract auditing and DeFi protocol security. Building at the intersection of security and quantitative finance.",
+    "Security engineer specializing in smart contract architecture and DeFi protocol security. Building at the intersection of security and quantitative finance.",
   keywords: [
     "blockchain security",
     "smart contract auditing",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "unorthod0xd | Blockchain Security Engineer",
+    title: "unorthod0xd | Security Engineer",
     description:
       "Building at the intersection of smart contract security and quantitative finance.",
     url: "https://unorthod0xd.xyz",
@@ -68,13 +68,13 @@ export const metadata: Metadata = {
         url: "/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "unorthod0xd - Blockchain Security Engineer",
+        alt: "unorthod0xd - Security Engineer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "unorthod0xd | Blockchain Security Engineer",
+    title: "unorthod0xd | Security Engineer",
     description:
       "Building at the intersection of smart contract security and quantitative finance.",
     images: ["/og-image.svg"],
