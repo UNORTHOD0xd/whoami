@@ -15,11 +15,11 @@ interface Project {
 
 const projects: Project[] = [
   {
-    title: "Foundry DeFi Stablecoin",
+    title: "Parametrix",
     description:
-      "A decentralized stablecoin system built with Foundry. Implements collateralized debt positions, liquidation mechanisms, and price oracle integration.",
-    tags: ["Solidity", "Foundry", "DeFi"],
-    githubUrl: "https://github.com/UNORTHOD0xd/Foundry-Defi-Stablecoin",
+      "Trustless parametric insurance protocol powered by Chainlink CRE. Farmers purchase weather-based policies with automated verification and severity-proportional payouts via ERC4626 vault.",
+    tags: ["Solidity", "Chainlink", "TypeScript", "DeFi"],
+    githubUrl: "https://github.com/UNORTHOD0xd/Parametrix",
     status: "Personal",
   },
   {
