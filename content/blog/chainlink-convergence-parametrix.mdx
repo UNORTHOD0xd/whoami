@@ -1,0 +1,130 @@
+---
+title: "What a Hackathon Taught Me About Protocol Architecture"
+date: "2026-02-22"
+excerpt: "Building Parametrix at the Chainlink Convergence hackathon - where protocol design decisions mattered more than code, CRE proved itself, and a broken dependency led to my first open source contribution."
+tags: ["chainlink", "hackathon", "solidity", "architecture", "building"]
+---
+
+**Quick context:** If you read my last post, you know I was preparing for my third Chainlink hackathon. Well, it happened. The Chainlink Convergence hackathon wrapped up, and I came out the other side with a full protocol, some hard lessons about architecture, and an unexpected open source contribution. Let me break it all down.
+
+---
+
+## The Idea: Parametric Insurance on Chain
+
+The project was [Parametrix](https://github.com/UNORTHOD0xd/Parametrix) - a trustless parametric insurance protocol for farmers. The concept: a farmer buys a weather-based insurance policy (drought, flood, frost, hurricane), and if verified weather data confirms the trigger condition was met, they get paid out automatically. No claims adjusters, no paperwork, no trust assumptions.
+
+Sounds clean on paper. Building it was a different story.
+
+## Architecture First, Code Second
+
+The biggest lesson from this hackathon had nothing to do with Solidity syntax or frontend frameworks. It was about *thinking through protocol architecture before writing a single line of code*.
+
+In previous hackathons, I would jump straight into coding. Get a contract compiling, wire up a frontend, figure out the rest as I go. This time, I forced myself to sit with the design. And it saved me.
+
+Here's what I mean. Parametrix has four core contracts:
+
+- **ParametrixCore** - the orchestrator that manages the policy lifecycle
+- **SimpleVault** - an ERC4626 vault where liquidity providers deposit capital
+- **WeatherModule** - a pluggable risk module that validates parameters and calculates payouts
+- **CREConsumer** - the bridge between Chainlink's DON and the on-chain protocol
+
+Each of these contracts has a specific role and a clear boundary. ParametrixCore doesn't know how premiums are calculated - it delegates to the WeatherModule. The vault doesn't know about weather - it just manages capital reservation and releases. The CREConsumer doesn't know about policy logic - it just receives verified reports and forwards them.
+
+This separation sounds obvious. But I almost didn't do it. My first instinct was to put everything in one big contract. Premium logic, vault logic, weather verification - all in one place. It would have been faster to write initially, but the moment I needed to add hurricane as a fourth peril type (it wasn't in my original plan), I realized how clean the modular approach was. Adding a new peril was just adding an enum value and a trigger condition in the WeatherModule. Nothing else had to change.
+
+### The Capital Reservation Problem
+
+The design decision that took the longest to reason through was capital reservation. When a farmer buys a policy with $10,000 of coverage, that capital needs to be locked in the vault so LPs can't withdraw it. But when the policy expires or gets paid out, that capital needs to flow back.
+
+The invariant is simple: `totalReserved <= totalAssets()`. But getting the flows right - when to reserve, when to release, what happens on partial payouts, how LP withdrawals interact with reserved capital - that required sitting with a notebook and tracing every possible state transition.
+
+I spent almost a full day on this before writing any vault code. Previous me would have called that wasted time. Current me knows it prevented a class of bugs that would have been much harder to find in code review.
+
+### Severity-Proportional Payouts
+
+Another architecture decision that paid off: making payouts proportional to severity instead of binary. My first design was simple - if the trigger is met, pay the full coverage amount. But real weather events don't work like that. A mild drought shouldn't pay the same as a catastrophic one.
+
+So I built severity into the protocol. The CRE workflow calculates how far the actual weather deviated from the threshold, scales it to a 0-100 severity score, and the payout is `coverage * severity / 100`. This one decision made the whole protocol more realistic and capital-efficient. LPs aren't getting wiped out by marginal trigger events.
+
+None of this is complex code. The smart contract logic is straightforward. But *deciding* on these mechanics - actually thinking through the implications before implementing - was the real work.
+
+## CRE: The Stack Chainlink Should Have Always Had
+
+Let me talk about Chainlink's Compute Runtime Environment, because it genuinely impressed me.
+
+If you've worked with Chainlink before, you know the pain. There were Functions, Automation, VRF, Data Feeds, CCIP - all useful individually, but scattered. Each had its own setup, its own configuration patterns, its own deployment quirks. Stitching them together for anything non-trivial felt like assembling furniture from five different brands with five different instruction manuals.
+
+CRE consolidates all of that into one coherent stack. You write a workflow in TypeScript, define your triggers (event-based, cron-based, or both), specify your data sources, configure how the DON reaches consensus, and define where the result gets delivered. One workflow file. One configuration. One deployment path.
+
+For Parametrix, my CRE workflow handles:
+
+1. **Event Trigger** - listens for `ClaimSubmitted` events on-chain, reads the full policy parameters dynamically from the contract
+2. **Data Fetching** - hits two independent weather APIs (Open-Meteo archive and forecast) for the same location and date range
+3. **DON Consensus** - each node independently fetches and evaluates, then they aggregate using median strategy with Byzantine fault tolerance
+4. **Report Delivery** - encodes the verification result and submits it on-chain through the KeystoneForwarder
+
+What would have taken three or four separate Chainlink services before was one ~600 line TypeScript file. And the abstractions make sense. The trigger types, the consensus configuration, the compute actions - they compose naturally. I didn't have to fight the framework to get it to do what I wanted.
+
+The dual-trigger setup was particularly clean. The event trigger fires when a farmer submits a claim, reads all the relevant policy data directly from the contract, and processes it. The cron trigger runs on a schedule for monitoring and demos. Same evaluation logic, different entry points, no code duplication. That kind of flexibility in an oracle framework is something I hadn't experienced before with Chainlink's older offerings.
+
+I won't pretend everything was smooth. Documentation for CRE is still maturing, and some of the SDK types required digging through source code to understand. But the developer experience is a massive leap forward from what came before.
+
+## My First Open Source Contribution
+
+Here's one I didn't expect. Midway through the hackathon, the [Javy toolkit](https://github.com/bytecodealliance/javy) - which CRE uses under the hood for WebAssembly compilation of TypeScript workflows - broke within my project. Something in a recent update introduced a compatibility issue that was causing my workflow builds to fail.
+
+I could have panicked. Hackathon clock is ticking, your build pipeline is broken, and it's not even your code that's the problem. But instead of trying to hack around it, I dug into the Javy source, identified the issue, and submitted a fix upstream.
+
+It's a small contribution in the grand scheme of things. But it was my first real open source PR to a project I didn't own, and it happened because a hackathon forced me into an uncomfortable situation. There's something satisfying about going from "this is broken and I'm stuck" to "I understand why it's broken and here's the fix." It's a different kind of learning than building your own projects. You're reading someone else's code, understanding their design decisions, and contributing within their patterns.
+
+## The Full Stack
+
+For the curious, here's what the final stack looked like:
+
+- **Smart Contracts**: Solidity 0.8.24, Foundry, OpenZeppelin (ERC4626, access control, reentrancy guards)
+- **CRE Workflow**: TypeScript, Chainlink CRE SDK, Zod for config validation, Viem for ABI encoding
+- **Frontend**: Next.js 14, React 18, Tailwind, wagmi v2, RainbowKit, Leaflet for the location picker, Recharts for data viz
+- **Infrastructure**: Tenderly Virtual TestNets for development and deployment, Open-Meteo APIs for weather data (free, no API keys)
+
+The monorepo structure (contracts, workflows, frontend in separate packages) was another lesson in organization. Keeping the boundaries clean between packages mirrors the contract architecture - each piece knows its job and doesn't leak into the others.
+
+36 tests across the contract suite, including a full end-to-end integration test that walks through the entire lifecycle: LP deposits capital, farmer buys policy, farmer submits claim, CRE delivers verification report, payout executes, LP withdraws.
+
+## What I'd Do Differently
+
+I'd spend even more time on architecture. Specifically, I'd formalize the state machine for policies before writing any code. I did reason through it, but having an actual state diagram would have caught a few edge cases earlier - like what happens when a policy expires while a claim is pending verification.
+
+I'd also start the frontend earlier. I pushed it to the last few days and ended up fixing hydration mismatches right up until the deadline. The protocol logic was solid, but the presentation layer felt rushed.
+
+## Third Time's the Pattern
+
+First hackathon: humbling. Showed up unprepared and got outclassed by teams that actually knew what they were doing.
+
+Second hackathon: more prepared. Had the technical skills but still struggled with scope and execution under pressure.
+
+Third hackathon: architecture-first. The strongest foundation translated to the strongest output. Not because I wrote more code, but because I wrote the *right* code. The hours spent designing before implementing weren't wasted - they were the most productive hours of the entire event.
+
+The pattern is clear. Technical skill is necessary but not sufficient. Knowing *what* to build and *how* to structure it matters more than knowing how to implement any individual piece. Protocol architecture is the real skill. The code just follows.
+
+Still building. Still learning. But the foundation keeps getting stronger.
+
+```solidity
+// Architecture > Implementation
+contract Lesson {
+    struct HackathonResult {
+        uint256 linesOfCode;
+        uint256 hoursDesigning;
+        bool architectureFirst;
+        bool shipped;
+    }
+
+    function build(uint256 attempt) external pure returns (HackathonResult memory) {
+        return HackathonResult({
+            linesOfCode: attempt * 500,
+            hoursDesigning: attempt * 8,
+            architectureFirst: attempt >= 3,
+            shipped: true
+        });
+    }
+}
+```
