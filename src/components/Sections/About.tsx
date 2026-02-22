@@ -16,17 +16,11 @@ export default function About() {
         className="space-y-4 text-text-secondary leading-relaxed"
       >
         <p>
-          I&apos;m a Security engineer and computer science student
-          specializing in the Ethereum ecosystem. Currently working toward{" "}
-          <a
-            href="https://updraft.cyfrin.io"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Cyfrin
-          </a>{" "}
-          certification while building expertise in smart contract auditing, EVM
-          internals, and DeFi protocol security.
+          I&apos;m a security engineer and computer science student
+          specializing in the Ethereum ecosystem. I deepen my security
+          engineering by building what I study: full-stack DeFi protocols,
+          CRE oracle workflows, and open source contributions, all grounded
+          in EVM internals and protocol security.
         </p>
 
         <p>
