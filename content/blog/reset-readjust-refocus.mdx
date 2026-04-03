@@ -1,0 +1,98 @@
+---
+title: "Reset, Readjust, Refocus"
+date: "2026-04-03"
+excerpt: "A Q1 reflection - recapping the wins, acknowledging the grind, and recognizing the course correction happening in real time."
+tags: ["reflection", "growth", "personal", "learning"]
+---
+
+**Quick context:** This one isn't a hackathon recap or a technical deep dive. I'm writing this purely for myself - to take stock of Q1 2026 before I let the momentum blur everything together. If it resonates with you, cool. If not, the next post will probably have code in it.
+
+---
+
+## Why I'm Writing This
+
+It's easy to forget how far you've come when you're constantly looking at how far you still have to go.
+
+As humans, we're basically hardwired to fixate on the negative. From a survival standpoint, it makes sense - noticing threats kept us alive. But in 2026, that same wiring has you scrolling past your wins and zooming in on every gap, every delay, every thing you haven't done yet. The chaos outside doesn't help either. Between global noise and personal pressure, it takes actual effort to sit down and acknowledge progress.
+
+So that's what this post is. Not a flex. Just a checkpoint.
+
+## The Wins
+
+Let me lay out what actually happened in the first three months of this year, because when I listed them out, even I was surprised.
+
+**January** - I paused the Cyfrin course and went back to fundamentals with "Mastering Ethereum." Built [ETH Analyzer](https://github.com/UNORTHOD0xd/eth-analyzer) in Rust from scratch - a CLI tool for querying and analyzing Ethereum blockchain data. Not because the tool didn't already exist, but because building it myself forced me to internalize concepts I'd only been reading about. Accounts, transactions, gas mechanics, blocks - all of it went from abstract to concrete.
+
+**February** - Chainlink Convergence hackathon. Built [Parametrix](https://github.com/UNORTHOD0xd/Parametrix) - a trustless parametric insurance protocol for farmers. Four core contracts, a CRE workflow, full frontend, 36 tests including end-to-end integration. But the real win wasn't the code. It was the approach. For the first time, I spent almost a full day on architecture before writing a single line. Previous hackathons, I would've been coding within the first hour. This time, the design came first. And it showed.
+
+**March** - Intellibus hackathon. Top ten overall. Second place in the CTF challenge. Met researchers and engineers working at the forefront of AI - not influencers, actual builders. Had conversations that shifted my perspective on where technology is heading.
+
+Three months. A Rust project, a full DeFi protocol, two hackathons, a CTF placement, an open source contribution, and a network of people I wouldn't have met if I stayed online.
+
+## The One That Caught Me Off Guard
+
+I want to talk about the open source contribution separately because it meant more to me than I expected.
+
+Midway through the Chainlink Convergence hackathon, the [Javy toolkit](https://github.com/bytecodealliance/javy) - which CRE uses under the hood for WebAssembly compilation - broke within my project. A recent update introduced a compatibility issue that was killing my workflow builds. Hackathon clock ticking, build pipeline broken, and it wasn't even my code.
+
+Old me would have panicked or tried to hack around it. Instead, I dug into the Javy source, traced the issue, and submitted a fix upstream. My first real open source contribution to a project I didn't own.
+
+It sounds small when I type it out. But there's a difference between using open source tools and actually contributing back to them. For the first time, I wasn't just consuming someone else's work - I was reading their codebase, understanding their design decisions, and contributing within their patterns. That's a fundamentally different relationship with the tools you use. It shifted something in how I see myself as a developer. Not just someone who builds on top of other people's work, but someone who can contribute to the ecosystem itself.
+
+That one wasn't planned. It happened because a hackathon put me in an uncomfortable spot and I didn't flinch. Sometimes the best milestones are the ones you didn't see coming.
+
+## The Pattern I Didn't Notice
+
+When I look at that list, something stands out that I didn't plan for: each thing built on the one before it.
+
+Going back to basics with Mastering Ethereum gave me the foundation that made Parametrix's architecture possible. The architecture-first mindset from Parametrix carried into how I approached the Intellibus challenges. The confidence from competing carried into conversations with people I would've been too intimidated to approach a year ago.
+
+None of this was a straight line when I was living it. It felt scattered. It felt like I was jumping between things. But looking back, there's a thread connecting all of it. The compounding was happening - I just couldn't see it in real time.
+
+## The Readjustment
+
+Here's the honest part.
+
+I'm in a readjustment phase. That's the best way I can describe it. I'm not where I was a year ago - that's obvious from the work. But I'm also not where I want to be. And the space between those two points is where most of the doubt lives.
+
+Course correcting while moving is uncomfortable. You can't stop and recalibrate from a standstill - life doesn't work like that. You adjust mid-stride. You realize your approach to learning was wrong, so you pause a course and pick up a book. You realize your approach to building was wrong, so you spend a day on architecture instead of jumping into code. You realize your network was too online, so you show up in person.
+
+Each of those adjustments felt like a setback in the moment. Pausing Cyfrin felt like going backwards. Spending a whole day not writing code during a hackathon felt like wasting time. Going to an in-person event when I could've been heads down building felt like a distraction.
+
+They weren't. They were course corrections. And the results speak for themselves.
+
+## What's Ahead
+
+Finals are coming up. University doesn't pause for hackathons or personal growth arcs. So the next few weeks are about academics. But like I said in my last post - the structured thinking, the problem decomposition, the discipline of sitting down and doing the work - it all feeds the same skill set. The classroom and the hackathon floor aren't as different as people think.
+
+After that? I've got a list of things I want to build that keeps growing faster than I can cross items off. That's a good problem to have.
+
+## The Point
+
+If you're in a phase where it feels like you're not making progress, zoom out. Not on a motivational poster level - actually sit down and list what you've done. You'll probably surprise yourself.
+
+The negativity bias is real. The chaos is real. But so is the work you've put in. Don't let the noise drown out the signal.
+
+Reset. Readjust. Refocus. Keep moving.
+
+```python
+# Q1 2026
+class Quarter:
+    def __init__(self):
+        self.projects_shipped = ["eth-analyzer", "parametrix"]
+        self.hackathons = 2
+        self.ctf_placement = 2
+        self.open_source_contributions = 1
+        self.phase = "readjusting"
+
+    def reflect(self):
+        # The wins are real
+        # The gaps are real
+        # Both can be true at the same time
+        return "keep_moving"
+
+    def compound(self, quarter):
+        # Each quarter builds on the last
+        # You just can't see it in real time
+        return quarter + 1
+```
